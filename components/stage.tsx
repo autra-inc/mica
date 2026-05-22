@@ -1172,6 +1172,8 @@ export function Stage({
               onTogglePresentation={togglePresentation}
               onPresentationInteractionChange={setIsPresentationInteractionActive}
               fullscreenContainerRef={stageRef}
+              isEditMode={mode === 'autonomous'}
+              onToggleEditMode={currentScene?.type === 'slide' ? handleToggleEditMode : undefined}
             />
           </div>
         )}
