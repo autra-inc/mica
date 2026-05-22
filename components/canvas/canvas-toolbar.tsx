@@ -7,6 +7,8 @@ import {
   Play,
   Pause,
   PencilLine,
+  SquarePen,
+  Eye,
   LayoutList,
   MessageSquare,
   Volume1,
@@ -50,6 +52,8 @@ export interface CanvasToolbarProps {
   readonly onToggleAutoPlay?: () => void;
   readonly playbackSpeed?: number;
   readonly onCycleSpeed?: () => void;
+  readonly isEditMode?: boolean;
+  readonly onToggleEditMode?: () => void;
 }
 
 /* Compact control button */
@@ -108,6 +112,8 @@ export function CanvasToolbar({
   onToggleAutoPlay,
   playbackSpeed = 1,
   onCycleSpeed,
+  isEditMode,
+  onToggleEditMode,
 }: CanvasToolbarProps) {
   const { t } = useI18n();
   const canGoPrev = currentSceneIndex > 0;
@@ -393,6 +399,30 @@ export function CanvasToolbar({
               <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-violet-500 dark:bg-violet-400 rounded-full" />
             )}
           </button>
+
+          {/* Edit mode toggle (slide scenes only) */}
+          {onToggleEditMode && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleEditMode();
+              }}
+              className={cn(
+                ctrlBtn,
+                'w-6 h-6',
+                isEditMode
+                  ? 'text-amber-500 dark:text-amber-400 bg-amber-500/10 dark:bg-amber-400/10'
+                  : 'text-gray-500 dark:text-gray-400',
+              )}
+              title={isEditMode ? t('stage.doneEditing') : t('stage.editSlide')}
+            >
+              {isEditMode ? (
+                <Eye className="w-3.5 h-3.5" />
+              ) : (
+                <SquarePen className="w-3.5 h-3.5" />
+              )}
+            </button>
+          )}
         </div>
       </div>
 

@@ -49,6 +49,7 @@ export function Stage({
   const { t } = useI18n();
   const {
     mode,
+    setMode,
     getCurrentScene,
     scenes,
     currentSceneId,
@@ -797,6 +798,15 @@ export function Stage({
     setWhiteboardOpen(!whiteboardOpen);
   };
 
+  // edit mode toggle (playback ↔ autonomous)
+  const handleToggleEditMode = useCallback(() => {
+    const next = mode === 'playback' ? 'autonomous' : 'playback';
+    setMode(next);
+    if (next === 'autonomous' && whiteboardOpen) {
+      setWhiteboardOpen(false);
+    }
+  }, [mode, setMode, whiteboardOpen, setWhiteboardOpen]);
+
   const isPresentationShortcutTarget = useCallback((target: EventTarget | null) => {
     if (!(target instanceof HTMLElement)) return false;
 
@@ -1021,6 +1031,7 @@ export function Stage({
                 ? () => onRetryOutline(generatingOutlines[0].id)
                 : undefined
             }
+            onToggleEditMode={handleToggleEditMode}
           />
         </div>
 
