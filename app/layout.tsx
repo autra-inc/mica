@@ -18,7 +18,7 @@ const inter = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Mica',
+  title: 'Mira',
   description:
     'AI-powered lesson generation for Autra Academy instructors. Generate slides, quizzes, and interactive content from any topic.',
 };

@@ -482,7 +482,7 @@ function HomePage() {
           }}
           className="text-4xl md:text-5xl font-bold tracking-tight mb-2"
         >
-          mica
+          mira
         </motion.h1>
 
         {/* ── Slogan ── */}
@@ -799,7 +799,7 @@ function HomePage() {
 
       {/* Footer — flows with content, at the very end */}
       <div className="mt-auto pt-12 pb-4 text-center text-xs text-muted-foreground/40">
-        Mica — Autra Academy
+        Mira — Autra Academy
       </div>
     </div>
   );

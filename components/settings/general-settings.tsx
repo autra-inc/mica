@@ -67,7 +67,7 @@ export function GeneralSettings() {
       <div className="rounded-xl border bg-muted/20 p-4">
         <h3 className="text-sm font-semibold mb-2">About</h3>
         <p className="text-xs text-muted-foreground leading-relaxed">
-          Mica is a deployment of{' '}
+          Mira is a deployment of{' '}
           <a
             href="https://github.com/THU-MAIC/OpenMAIC"
             target="_blank"
