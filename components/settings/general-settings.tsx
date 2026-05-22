@@ -63,6 +63,41 @@ export function GeneralSettings() {
 
   return (
     <div className="flex flex-col gap-8">
+      {/* About / Source — AGPL-3.0 §13 source-availability notice */}
+      <div className="rounded-xl border bg-muted/20 p-4">
+        <h3 className="text-sm font-semibold mb-2">About</h3>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Mica is a deployment of{' '}
+          <a
+            href="https://github.com/THU-MAIC/OpenMAIC"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-foreground"
+          >
+            OpenMAIC
+          </a>
+          , an open-source multi-agent classroom platform licensed under{' '}
+          <a
+            href="https://www.gnu.org/licenses/agpl-3.0.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-foreground"
+          >
+            AGPL-3.0
+          </a>
+          . Source code:{' '}
+          <a
+            href="https://github.com/autra-ai/mica"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-foreground"
+          >
+            github.com/autra-ai/mica
+          </a>
+          .
+        </p>
+      </div>
+
       {/* Danger Zone - Clear Cache */}
       <div className="relative rounded-xl border border-destructive/30 bg-destructive/[0.03] dark:bg-destructive/[0.06] overflow-hidden">
         {/* Subtle diagonal stripe pattern for danger emphasis */}
