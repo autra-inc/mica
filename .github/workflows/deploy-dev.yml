@@ -49,7 +49,7 @@ jobs:
           echo "Instance: $INSTANCE_ID"
 
           COMMAND_ID=$(aws ssm send-command \
-            --instance-ids "$INSTANCE_ID" \
+            --targets "Key=tag:Name,Values=${{ env.INSTANCE_TAG_NAME }}" \
             --document-name "AWS-RunShellScript" \
             --parameters '{"commands":["bash /usr/local/bin/mica-deploy dev-${{ github.sha }} 2>&1"],"executionTimeout":["300"]}' \
             --query Command.CommandId --output text)
