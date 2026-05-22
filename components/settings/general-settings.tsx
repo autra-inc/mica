@@ -85,14 +85,12 @@ export function GeneralSettings() {
           >
             AGPL-3.0
           </a>
-          . Source code:{' '}
+          . Source code is available on request — contact{' '}
           <a
-            href="https://github.com/autra-inc/mica"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="mailto:admin@autra.ai"
             className="underline hover:text-foreground"
           >
-            github.com/autra-inc/mica
+            admin@autra.ai
           </a>
           .
         </p>
