@@ -87,12 +87,12 @@ export function GeneralSettings() {
           </a>
           . Source code:{' '}
           <a
-            href="https://github.com/autra-ai/mica"
+            href="https://github.com/autra-inc/mica"
             target="_blank"
             rel="noopener noreferrer"
             className="underline hover:text-foreground"
           >
-            github.com/autra-ai/mica
+            github.com/autra-inc/mica
           </a>
           .
         </p>
