@@ -18,9 +18,9 @@ const inter = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'OpenMAIC',
+  title: 'Mica',
   description:
-    'The open-source AI interactive classroom. Upload a PDF to instantly generate an immersive, multi-agent learning experience.',
+    'AI-powered lesson generation for Autra Academy instructors. Generate slides, quizzes, and interactive content from any topic.',
 };
 
 export default function RootLayout({
