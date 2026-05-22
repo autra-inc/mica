@@ -416,11 +416,7 @@ export function CanvasToolbar({
               )}
               title={isEditMode ? t('stage.doneEditing') : t('stage.editSlide')}
             >
-              {isEditMode ? (
-                <Eye className="w-3.5 h-3.5" />
-              ) : (
-                <SquarePen className="w-3.5 h-3.5" />
-              )}
+              {isEditMode ? <Eye className="w-3.5 h-3.5" /> : <SquarePen className="w-3.5 h-3.5" />}
             </button>
           )}
         </div>
