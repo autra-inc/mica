@@ -67,7 +67,7 @@ export function GeneralSettings() {
       <div className="rounded-xl border bg-muted/20 p-4">
         <h3 className="text-sm font-semibold mb-2">About</h3>
         <p className="text-xs text-muted-foreground leading-relaxed">
-          Mira is a deployment of{' '}
+          Mica is a deployment of{' '}
           <a
             href="https://github.com/THU-MAIC/OpenMAIC"
             target="_blank"
@@ -85,12 +85,14 @@ export function GeneralSettings() {
           >
             AGPL-3.0
           </a>
-          . Source code is available on request — contact{' '}
+          . Source code:{' '}
           <a
-            href="mailto:admin@autra.ai"
+            href="https://github.com/autra-inc/mica"
+            target="_blank"
+            rel="noopener noreferrer"
             className="underline hover:text-foreground"
           >
-            admin@autra.ai
+            github.com/autra-inc/mica
           </a>
           .
         </p>
