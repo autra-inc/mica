@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { useCanvasStore } from '@/lib/store';
 import { useSceneSelector } from '@/lib/contexts/scene-context';
 import emitter, { EmitterEvents } from '@/lib/utils/emitter';
+import { FONTS } from '@/configs/font';
 import type { SlideContent } from '@/lib/types/stage';
 import type { Slide } from '@/lib/types/slides';
 
@@ -126,6 +127,28 @@ export function TextFormatBar() {
       <Btn active={attrs.strikethrough} disabled={!isEditing} title="Strikethrough" onClick={() => cmd('strikethrough')}>
         <Strikethrough className="w-3 h-3" />
       </Btn>
+
+      {divider}
+
+      {/* Font family */}
+      <select
+        value={attrs.fontname}
+        disabled={!isEditing}
+        onMouseDown={(e) => e.stopPropagation()}
+        onChange={(e) => cmd('fontname', e.target.value)}
+        className={cn(
+          'h-6 px-1 text-xs border border-gray-200 dark:border-gray-600 rounded cursor-pointer',
+          'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300',
+          'focus:outline-none focus:ring-1 focus:ring-primary/40 max-w-[120px]',
+          !isEditing && 'opacity-40',
+        )}
+      >
+        {FONTS.map((f) => (
+          <option key={f.value} value={f.value}>
+            {f.label}
+          </option>
+        ))}
+      </select>
 
       {divider}
 
