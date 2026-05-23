@@ -22,10 +22,7 @@ export function LineStylePanel({ element }: { element: PPTLineElement }) {
       <div className="flex flex-col gap-1.5">
         <Row>
           <span className="text-[10px] text-gray-500 w-10 flex-shrink-0">Color</span>
-          <ColorInput
-            value={element.color ?? '#333333'}
-            onChange={(v) => update({ color: v })}
-          />
+          <ColorInput value={element.color ?? '#333333'} onChange={(v) => update({ color: v })} />
         </Row>
         <Row>
           <span className="text-[10px] text-gray-500 w-10 flex-shrink-0">Style</span>

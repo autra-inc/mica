@@ -25,10 +25,7 @@ export function ShapeStylePanel({ element }: { element: PPTShapeElement }) {
     <>
       <Section title="Fill">
         <div className="flex flex-col gap-1.5">
-          <ColorInput
-            value={element.fill ?? '#5b5ea6'}
-            onChange={(v) => update({ fill: v })}
-          />
+          <ColorInput value={element.fill ?? '#5b5ea6'} onChange={(v) => update({ fill: v })} />
           <OpacityRow value={element.opacity} onChange={(v) => update({ opacity: v })} />
         </div>
       </Section>

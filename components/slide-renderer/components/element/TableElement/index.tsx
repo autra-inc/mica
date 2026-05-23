@@ -28,9 +28,7 @@ export function TableElement({ elementInfo, selectElement, editable = false }: T
   const handleCellUpdate = useCallback(
     (rowIdx: number, colIdx: number, text: string) => {
       const newData = elementInfo.data.map((row, rIdx) =>
-        row.map((cell, cIdx) =>
-          rIdx === rowIdx && cIdx === colIdx ? { ...cell, text } : cell,
-        ),
+        row.map((cell, cIdx) => (rIdx === rowIdx && cIdx === colIdx ? { ...cell, text } : cell)),
       );
       updateElement({ id: elementInfo.id, props: { data: newData } as Partial<PPTTableElement> });
       addHistorySnapshot();

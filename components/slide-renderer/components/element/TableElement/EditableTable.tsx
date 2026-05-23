@@ -59,10 +59,7 @@ export function EditableTable({ elementInfo, onCellUpdate }: EditableTableProps)
   );
 
   return (
-    <table
-      className="w-full h-full"
-      style={{ borderCollapse: 'collapse', tableLayout: 'fixed' }}
-    >
+    <table className="w-full h-full" style={{ borderCollapse: 'collapse', tableLayout: 'fixed' }}>
       <colgroup>
         {colWidths.map((w, i) => (
           <col key={i} style={{ width: `${w * width}px` }} />
@@ -131,7 +128,9 @@ export function EditableTable({ elementInfo, onCellUpdate }: EditableTableProps)
                     />
                   ) : (
                     <div
-                      dangerouslySetInnerHTML={{ __html: cell.text ? formatText(cell.text) : '&nbsp;' }}
+                      dangerouslySetInnerHTML={{
+                        __html: cell.text ? formatText(cell.text) : '&nbsp;',
+                      }}
                     />
                   )}
                 </td>

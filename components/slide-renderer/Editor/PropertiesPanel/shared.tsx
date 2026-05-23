@@ -74,13 +74,7 @@ export function NumInput({
   );
 }
 
-export function ColorInput({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-}) {
+export function ColorInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const hex = value?.startsWith('#') ? value : '#000000';
   return (

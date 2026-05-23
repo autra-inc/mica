@@ -2,9 +2,15 @@
 
 import { useRef } from 'react';
 import {
-  Bold, Italic, Underline, Strikethrough,
-  AlignLeft, AlignCenter, AlignRight,
-  List, ListOrdered,
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  List,
+  ListOrdered,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCanvasStore } from '@/lib/store';
@@ -31,15 +37,16 @@ function Btn({
 }) {
   return (
     <button
-      onMouseDown={(e) => { e.preventDefault(); onClick(); }}
+      onMouseDown={(e) => {
+        e.preventDefault();
+        onClick();
+      }}
       title={title}
       disabled={disabled}
       className={cn(
         'flex items-center justify-center w-6 h-6 rounded text-xs cursor-pointer transition-colors',
         'text-gray-600 dark:text-gray-300',
-        active
-          ? 'bg-primary/15 text-primary'
-          : 'hover:bg-gray-100 dark:hover:bg-gray-700',
+        active ? 'bg-primary/15 text-primary' : 'hover:bg-gray-100 dark:hover:bg-gray-700',
         disabled && 'opacity-30 cursor-not-allowed',
       )}
     >
@@ -61,7 +68,10 @@ function ColorBtn({
   return (
     <div className="flex flex-col items-center cursor-pointer" title={title}>
       <button
-        onMouseDown={(e) => { e.preventDefault(); ref.current?.click(); }}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          ref.current?.click();
+        }}
         className="flex items-center justify-center w-6 h-6 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
       >
         <span className="text-xs font-bold text-gray-600 dark:text-gray-300 leading-none">A</span>
@@ -92,9 +102,7 @@ export function TextFormatBar() {
   // Determine if a text element is selected
   const selectedTextElement =
     activeElementIdList.length === 1
-      ? currentSlide.elements.find(
-          (el) => el.id === activeElementIdList[0] && el.type === 'text',
-        )
+      ? currentSlide.elements.find((el) => el.id === activeElementIdList[0] && el.type === 'text')
       : undefined;
 
   if (!selectedTextElement) return null;
@@ -179,7 +187,11 @@ export function TextFormatBar() {
       {/* Text color */}
       <ColorBtn color={attrs.color} title="Text color" onChange={(v) => cmd('color', v)} />
       {/* Background color */}
-      <ColorBtn color={attrs.backcolor} title="Highlight color" onChange={(v) => cmd('backcolor', v)} />
+      <ColorBtn
+        color={attrs.backcolor}
+        title="Highlight color"
+        onChange={(v) => cmd('backcolor', v)}
+      />
 
       {divider}
 
@@ -187,10 +199,18 @@ export function TextFormatBar() {
       <Btn active={attrs.align === 'left'} title="Align left" onClick={() => cmd('align', 'left')}>
         <AlignLeft className="w-3 h-3" />
       </Btn>
-      <Btn active={attrs.align === 'center'} title="Align center" onClick={() => cmd('align', 'center')}>
+      <Btn
+        active={attrs.align === 'center'}
+        title="Align center"
+        onClick={() => cmd('align', 'center')}
+      >
         <AlignCenter className="w-3 h-3" />
       </Btn>
-      <Btn active={attrs.align === 'right'} title="Align right" onClick={() => cmd('align', 'right')}>
+      <Btn
+        active={attrs.align === 'right'}
+        title="Align right"
+        onClick={() => cmd('align', 'right')}
+      >
         <AlignRight className="w-3 h-3" />
       </Btn>
 

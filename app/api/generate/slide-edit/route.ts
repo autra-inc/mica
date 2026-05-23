@@ -18,10 +18,17 @@ function summarizeSlide(slide: Slide): string {
     const size = `${Math.round(el.width)}×${'height' in el ? Math.round((el as { height: number }).height) : '?'}`;
     let extra = '';
     if (el.type === 'text') {
-      const plain = el.content.replace(/<[^>]+>/g, '').trim().slice(0, 120);
+      const plain = el.content
+        .replace(/<[^>]+>/g, '')
+        .trim()
+        .slice(0, 120);
       if (plain) extra = `, text: "${plain}"`;
     } else if (el.type === 'shape' && el.text) {
-      const plain = el.text.content?.replace(/<[^>]+>/g, '').trim().slice(0, 80) ?? '';
+      const plain =
+        el.text.content
+          ?.replace(/<[^>]+>/g, '')
+          .trim()
+          .slice(0, 80) ?? '';
       if (plain) extra = `, text: "${plain}"`;
     } else if (el.type === 'table') {
       extra = `, rows: ${el.data.length}, cols: ${el.data[0]?.length ?? 0}`;

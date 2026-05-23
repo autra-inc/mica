@@ -62,15 +62,9 @@ export function TextStylePanel({ element }: { element: PPTTextElement }) {
             </label>
           </Row>
           {hasBg && (
-            <ColorInput
-              value={element.fill ?? '#ffffff'}
-              onChange={(v) => update({ fill: v })}
-            />
+            <ColorInput value={element.fill ?? '#ffffff'} onChange={(v) => update({ fill: v })} />
           )}
-          <OpacityRow
-            value={element.opacity}
-            onChange={(v) => update({ opacity: v })}
-          />
+          <OpacityRow value={element.opacity} onChange={(v) => update({ opacity: v })} />
         </div>
       </Section>
     </>

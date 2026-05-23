@@ -17,7 +17,9 @@ export function ImageStylePanel({ element }: { element: PPTImageElement }) {
     <Section title="Image">
       <div className="flex flex-col gap-1.5">
         <OpacityRow
-          value={element.filters?.opacity !== undefined ? parseFloat(element.filters.opacity) / 100 : 1}
+          value={
+            element.filters?.opacity !== undefined ? parseFloat(element.filters.opacity) / 100 : 1
+          }
           onChange={(v) => {
             update({
               filters: { ...element.filters, opacity: `${Math.round(v * 100)}` },
@@ -36,8 +38,7 @@ export function ImageStylePanel({ element }: { element: PPTImageElement }) {
                 : 'border-gray-200 dark:border-gray-600 text-gray-500 hover:border-gray-400',
             )}
           >
-            <FlipHorizontal className="w-3 h-3" />
-            H
+            <FlipHorizontal className="w-3 h-3" />H
           </button>
           <button
             onClick={() => update({ flipV: !element.flipV })}
@@ -49,8 +50,7 @@ export function ImageStylePanel({ element }: { element: PPTImageElement }) {
                 : 'border-gray-200 dark:border-gray-600 text-gray-500 hover:border-gray-400',
             )}
           >
-            <FlipVertical className="w-3 h-3" />
-            V
+            <FlipVertical className="w-3 h-3" />V
           </button>
         </Row>
       </div>

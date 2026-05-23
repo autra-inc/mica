@@ -2,16 +2,7 @@
 
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { nanoid } from 'nanoid';
-import {
-  Type,
-  Minus,
-  ArrowRight,
-  ImagePlus,
-  Table,
-  ChevronDown,
-  Undo2,
-  Redo2,
-} from 'lucide-react';
+import { Type, Minus, ArrowRight, ImagePlus, Table, ChevronDown, Undo2, Redo2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCanvasStore } from '@/lib/store';
 import { useCanvasOperations } from '@/lib/hooks/use-canvas-operations';
@@ -38,10 +29,7 @@ function TablePicker({ onPick }: { onPick: (rows: number, cols: number) => void 
   const MAX = 8;
   return (
     <div className="p-2">
-      <div
-        className="grid gap-0.5"
-        style={{ gridTemplateColumns: `repeat(${MAX}, 1fr)` }}
-      >
+      <div className="grid gap-0.5" style={{ gridTemplateColumns: `repeat(${MAX}, 1fr)` }}>
         {Array.from({ length: MAX * MAX }).map((_, i) => {
           const row = Math.floor(i / MAX) + 1;
           const col = (i % MAX) + 1;
@@ -294,9 +282,7 @@ export function SlideInsertToolbar() {
 
       {/* Hint when a draw tool is active */}
       {creatingElement && (
-        <span className="ml-2 text-xs text-primary italic">
-          Draw on the slide to place →
-        </span>
+        <span className="ml-2 text-xs text-primary italic">Draw on the slide to place →</span>
       )}
     </div>
   );

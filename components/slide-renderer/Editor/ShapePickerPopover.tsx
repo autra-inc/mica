@@ -8,11 +8,11 @@ import { SHAPE_LIST } from '@/configs/shapes';
 import type { ShapePoolItem } from '@/configs/shapes';
 
 const CATEGORY_LABELS: Record<string, string> = {
-  '矩形': 'Rect',
-  '常用形状': 'Shapes',
-  '箭头': 'Arrows',
-  '其他形状': 'More',
-  '线性': 'Icons',
+  矩形: 'Rect',
+  常用形状: 'Shapes',
+  箭头: 'Arrows',
+  其他形状: 'More',
+  线性: 'Icons',
 };
 
 function ShapeThumbnail({
@@ -35,11 +35,7 @@ function ShapeThumbnail({
         active && 'bg-primary/20 ring-1 ring-primary/40',
       )}
     >
-      <svg
-        viewBox={`0 0 ${vw} ${vh}`}
-        className="w-5 h-5"
-        style={{ overflow: 'visible' }}
-      >
+      <svg viewBox={`0 0 ${vw} ${vh}`} className="w-5 h-5" style={{ overflow: 'visible' }}>
         <path
           d={item.path}
           fill={item.special ? 'none' : 'currentColor'}
@@ -73,9 +69,7 @@ export function ShapePickerPopover() {
   }, [open]);
 
   const activeShape =
-    creatingElement?.type === 'shape' && 'data' in creatingElement
-      ? creatingElement.data
-      : null;
+    creatingElement?.type === 'shape' && 'data' in creatingElement ? creatingElement.data : null;
 
   const currentCategory = SHAPE_LIST.find((g) => g.type === activeCategory);
 

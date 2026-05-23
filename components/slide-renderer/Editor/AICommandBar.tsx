@@ -105,7 +105,10 @@ export function AICommandBar() {
     <div className="relative" ref={popoverRef}>
       <button
         className={cn(btn, open && 'bg-primary/10 text-primary')}
-        onClick={() => { setOpen((o) => !o); setError(null); }}
+        onClick={() => {
+          setOpen((o) => !o);
+          setError(null);
+        }}
         title="AI edit slide"
       >
         <Sparkles className="w-3.5 h-3.5" />
@@ -138,7 +141,9 @@ export function AICommandBar() {
               }
               if (e.key === 'Escape') setOpen(false);
             }}
-            placeholder={'Add a title, update text, rearrange elements...\nPress Enter to run, Shift+Enter for newline'}
+            placeholder={
+              'Add a title, update text, rearrange elements...\nPress Enter to run, Shift+Enter for newline'
+            }
             rows={3}
             disabled={loading}
             className={cn(
@@ -149,9 +154,7 @@ export function AICommandBar() {
             )}
           />
 
-          {error && (
-            <p className="mt-1.5 text-xs text-red-500 dark:text-red-400">{error}</p>
-          )}
+          {error && <p className="mt-1.5 text-xs text-red-500 dark:text-red-400">{error}</p>}
 
           <div className="flex justify-end mt-2">
             <button
@@ -164,9 +167,13 @@ export function AICommandBar() {
               )}
             >
               {loading ? (
-                <><Loader2 className="w-3 h-3 animate-spin" /> Generating…</>
+                <>
+                  <Loader2 className="w-3 h-3 animate-spin" /> Generating…
+                </>
               ) : (
-                <><Sparkles className="w-3 h-3" /> Generate</>
+                <>
+                  <Sparkles className="w-3 h-3" /> Generate
+                </>
               )}
             </button>
           </div>
