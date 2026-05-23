@@ -53,11 +53,11 @@ export async function POST(req: NextRequest) {
         ${id},
         ${title ?? 'Untitled'},
         ${description ?? null},
-        ${JSON.stringify(data)},
+        ${data},
         ${created_by ?? ''},
         ${scene_count ?? 0},
         ${interactive_mode ?? false},
-        ${thumbnail_data ? JSON.stringify(thumbnail_data) : null}
+        ${thumbnail_data ?? null}
       )
       ON CONFLICT (id) DO UPDATE SET
         title          = EXCLUDED.title,
