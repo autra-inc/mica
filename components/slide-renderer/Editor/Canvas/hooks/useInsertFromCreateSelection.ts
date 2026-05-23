@@ -103,7 +103,6 @@ export function useInsertFromCreateSelection(viewportRef: RefObject<HTMLElement 
           left: pos.left,
           top: pos.top,
           width: Math.max(Math.abs(pos.end[0] - pos.start[0]), 20),
-          height: Math.max(Math.abs(pos.end[1] - pos.start[1]), 1),
           start: pos.start,
           end: pos.end,
           style: creatingElement.data.style,
