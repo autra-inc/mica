@@ -9,12 +9,16 @@ import {
   ImagePlus,
   Table,
   ChevronDown,
+  Undo2,
+  Redo2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCanvasStore } from '@/lib/store';
 import { useCanvasOperations } from '@/lib/hooks/use-canvas-operations';
+import { useHistorySnapshot } from '@/lib/hooks/use-history-snapshot';
 import { LINE_LIST } from '@/configs/lines';
 import { ShapePickerPopover } from './ShapePickerPopover';
+import { BackgroundPickerPopover } from './BackgroundPickerPopover';
 import type { PPTTableElement } from '@/lib/types/slides';
 
 // ── Shared button style ────────────────────────────────────────────────────
@@ -68,6 +72,7 @@ export function SlideInsertToolbar() {
   const setCreatingElement = useCanvasStore.use.setCreatingElement();
   const creatingElement = useCanvasStore.use.creatingElement();
   const { addElement } = useCanvasOperations();
+  const { canUndo, canRedo, undo, redo, addHistorySnapshot } = useHistorySnapshot();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const tablePickerRef = useRef<HTMLDivElement>(null);
@@ -112,7 +117,6 @@ export function SlideInsertToolbar() {
         const src = ev.target?.result as string;
         const img = new Image();
         img.onload = () => {
-          // Scale to fit within 500px wide max, preserve ratio
           const maxW = 500;
           const scale = img.width > maxW ? maxW / img.width : 1;
           const w = img.width * scale;
@@ -128,14 +132,14 @@ export function SlideInsertToolbar() {
             height: h,
             rotate: 0,
           });
+          addHistorySnapshot();
         };
         img.src = src;
       };
       reader.readAsDataURL(file);
-      // Reset so the same file can be re-selected
       e.target.value = '';
     },
-    [addElement],
+    [addElement, addHistorySnapshot],
   );
 
   const handleInsertTable = useCallback(
@@ -164,12 +168,33 @@ export function SlideInsertToolbar() {
         ),
       };
       addElement(tableEl);
+      addHistorySnapshot();
     },
-    [addElement],
+    [addElement, addHistorySnapshot],
   );
 
   return (
     <div className="flex items-center gap-0.5 px-2 py-1 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+      {/* Undo / Redo */}
+      <button
+        className={cn(btn, !canUndo && 'opacity-30 cursor-not-allowed')}
+        onClick={() => undo()}
+        disabled={!canUndo}
+        title="Undo (Ctrl+Z)"
+      >
+        <Undo2 className="w-3.5 h-3.5" />
+      </button>
+      <button
+        className={cn(btn, !canRedo && 'opacity-30 cursor-not-allowed')}
+        onClick={() => redo()}
+        disabled={!canRedo}
+        title="Redo (Ctrl+Shift+Z)"
+      >
+        <Redo2 className="w-3.5 h-3.5" />
+      </button>
+
+      <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-0.5" />
+
       {/* Text */}
       <button
         className={cn(btn, creatingElement?.type === 'text' && activebtn)}
@@ -255,6 +280,11 @@ export function SlideInsertToolbar() {
           </div>
         )}
       </div>
+
+      <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-0.5" />
+
+      {/* Background */}
+      <BackgroundPickerPopover />
 
       {/* Hint when a draw tool is active */}
       {creatingElement && (

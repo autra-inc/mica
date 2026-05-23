@@ -2,6 +2,7 @@ import { useCallback, type RefObject } from 'react';
 import { nanoid } from 'nanoid';
 import { useCanvasStore } from '@/lib/store';
 import { useCanvasOperations } from '@/lib/hooks/use-canvas-operations';
+import { useHistorySnapshot } from '@/lib/hooks/use-history-snapshot';
 import type { CreateElementSelectionData } from '@/lib/types/edit';
 
 export function useInsertFromCreateSelection(viewportRef: RefObject<HTMLElement | null>) {
@@ -9,6 +10,7 @@ export function useInsertFromCreateSelection(viewportRef: RefObject<HTMLElement 
   const creatingElement = useCanvasStore.use.creatingElement();
   const setCreatingElement = useCanvasStore.use.setCreatingElement();
   const { addElement } = useCanvasOperations();
+  const { addHistorySnapshot } = useHistorySnapshot();
 
   const formatCreateSelection = useCallback(
     (selectionData: CreateElementSelectionData) => {
@@ -112,6 +114,7 @@ export function useInsertFromCreateSelection(viewportRef: RefObject<HTMLElement 
       }
 
       setCreatingElement(null);
+      addHistorySnapshot();
     },
     [
       creatingElement,
@@ -119,6 +122,7 @@ export function useInsertFromCreateSelection(viewportRef: RefObject<HTMLElement 
       formatCreateSelectionForLine,
       addElement,
       setCreatingElement,
+      addHistorySnapshot,
     ],
   );
 
