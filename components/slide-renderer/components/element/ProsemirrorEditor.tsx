@@ -158,6 +158,9 @@ export const ProsemirrorEditor = forwardRef<ProsemirrorEditorRef, ProsemirrorEdi
 
         const actions = 'command' in action ? [action] : action;
 
+        // Restore focus before applying marks so the selection state is consistent
+        if (!editorView.current.hasFocus()) editorView.current.focus();
+
         for (const item of actions) {
           if (item.command === 'fontname' && item.value !== undefined) {
             const mark = editorView.current.state.schema.marks.fontname.create({
