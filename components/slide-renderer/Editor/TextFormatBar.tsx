@@ -14,12 +14,6 @@ import { FONTS } from '@/configs/font';
 import type { SlideContent } from '@/lib/types/stage';
 import type { Slide } from '@/lib/types/slides';
 
-// ── helpers ────────────────────────────────────────────────────────────────
-
-function cmd(command: string, value?: string) {
-  emitter.emit(EmitterEvents.RICH_TEXT_COMMAND, { action: { command, value } });
-}
-
 const divider = <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-0.5 flex-shrink-0" />;
 
 function Btn({
@@ -104,6 +98,16 @@ export function TextFormatBar() {
       : undefined;
 
   if (!selectedTextElement) return null;
+
+  // Always target the element explicitly so commands work even when the
+  // toolbar interaction briefly clears handleElementId.
+  const elementId = selectedTextElement.id;
+  const cmd = (command: string, value?: string) => {
+    emitter.emit(EmitterEvents.RICH_TEXT_COMMAND, {
+      target: elementId,
+      action: { command, value },
+    });
+  };
 
   const attrs = richTextAttrs;
 
