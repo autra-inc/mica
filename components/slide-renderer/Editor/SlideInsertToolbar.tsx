@@ -4,8 +4,6 @@ import { useRef, useState, useCallback, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import {
   Type,
-  Square,
-  Circle,
   Minus,
   ArrowRight,
   ImagePlus,
@@ -15,8 +13,8 @@ import {
 import { cn } from '@/lib/utils';
 import { useCanvasStore } from '@/lib/store';
 import { useCanvasOperations } from '@/lib/hooks/use-canvas-operations';
-import { SHAPE_LIST } from '@/configs/shapes';
 import { LINE_LIST } from '@/configs/lines';
+import { ShapePickerPopover } from './ShapePickerPopover';
 import type { PPTTableElement } from '@/lib/types/slides';
 
 // ── Shared button style ────────────────────────────────────────────────────
@@ -86,10 +84,6 @@ export function SlideInsertToolbar() {
     return () => document.removeEventListener('mousedown', handler);
   }, [tablePickerOpen]);
 
-  // Rect shape: first child of the '矩形' group
-  const rectShape = SHAPE_LIST.find((g) => g.type === '矩形')?.children[0];
-  // Ellipse shape from '常用形状'
-  const ellipseShape = SHAPE_LIST.find((g) => g.type === '常用形状')?.children[0];
   // Simple arrow line
   const arrowLine = LINE_LIST[0]?.children.find((l) => l.points[1] === 'arrow');
   // Plain line
@@ -98,16 +92,6 @@ export function SlideInsertToolbar() {
   const startCreatingText = useCallback(() => {
     setCreatingElement({ type: 'text' });
   }, [setCreatingElement]);
-
-  const startCreatingRect = useCallback(() => {
-    if (!rectShape) return;
-    setCreatingElement({ type: 'shape', data: rectShape });
-  }, [setCreatingElement, rectShape]);
-
-  const startCreatingEllipse = useCallback(() => {
-    if (!ellipseShape) return;
-    setCreatingElement({ type: 'shape', data: ellipseShape });
-  }, [setCreatingElement, ellipseShape]);
 
   const startCreatingLine = useCallback(() => {
     if (!plainLine) return;
@@ -198,37 +182,8 @@ export function SlideInsertToolbar() {
 
       <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-0.5" />
 
-      {/* Rectangle */}
-      <button
-        className={cn(
-          btn,
-          creatingElement?.type === 'shape' &&
-            'data' in creatingElement &&
-            creatingElement.data === rectShape &&
-            activebtn,
-        )}
-        onClick={startCreatingRect}
-        title="Insert rectangle — draw on slide to place"
-      >
-        <Square className="w-3.5 h-3.5" />
-        <span>Rect</span>
-      </button>
-
-      {/* Ellipse */}
-      <button
-        className={cn(
-          btn,
-          creatingElement?.type === 'shape' &&
-            'data' in creatingElement &&
-            creatingElement.data === ellipseShape &&
-            activebtn,
-        )}
-        onClick={startCreatingEllipse}
-        title="Insert ellipse — draw on slide to place"
-      >
-        <Circle className="w-3.5 h-3.5" />
-        <span>Circle</span>
-      </button>
+      {/* Shape library picker */}
+      <ShapePickerPopover />
 
       <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-0.5" />
 
