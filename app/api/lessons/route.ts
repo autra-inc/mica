@@ -53,11 +53,13 @@ export async function POST(req: NextRequest) {
         ${id},
         ${title ?? 'Untitled'},
         ${description ?? null},
-        ${data as object},
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ${sql!.json(data as any)},
         ${created_by ?? ''},
         ${scene_count ?? 0},
         ${interactive_mode ?? false},
-        ${(thumbnail_data ?? null) as object | null}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ${thumbnail_data != null ? sql!.json(thumbnail_data as any) : null}
       )
       ON CONFLICT (id) DO UPDATE SET
         title          = EXCLUDED.title,

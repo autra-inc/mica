@@ -40,10 +40,12 @@ export async function PUT(req: NextRequest, { params }: Params) {
         UPDATE lessons SET
           title          = ${title ?? sql`title`},
           description    = ${description ?? null},
-          data           = ${data as object},
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          data           = ${sql!.json(data as any)},
           scene_count    = ${scene_count ?? 0},
           interactive_mode = ${interactive_mode ?? false},
-          thumbnail_data = ${(thumbnail_data ?? null) as object | null},
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          thumbnail_data = ${thumbnail_data != null ? sql!.json(thumbnail_data as any) : null},
           updated_at     = now()
         WHERE id = ${id}
       `;
