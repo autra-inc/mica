@@ -4,7 +4,8 @@
  */
 
 import type { StageStoreData, StageListItem } from './stage-storage';
-import type { Stage, Scene } from '../types/stage';
+import type { Stage } from '../types/stage';
+import { extractAndUploadMedia } from './media-extractor';
 
 export interface CloudLesson {
   id: string;
@@ -40,6 +41,7 @@ export async function cloudLoadLesson(id: string): Promise<StageStoreData | null
 export async function cloudSaveLesson(id: string, data: StageStoreData): Promise<void> {
   try {
     const stage = data.stage as Stage & { interactiveMode?: boolean };
+    const uploadedData = await extractAndUploadMedia(id, data);
     await fetch('/api/lessons', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -47,7 +49,11 @@ export async function cloudSaveLesson(id: string, data: StageStoreData): Promise
         id,
         title: stage.name || 'Untitled',
         description: stage.description,
-        data: { stage: data.stage, scenes: data.scenes, currentSceneId: data.currentSceneId },
+        data: {
+          stage: uploadedData.stage,
+          scenes: uploadedData.scenes,
+          currentSceneId: uploadedData.currentSceneId,
+        },
         created_by: '',
         scene_count: data.scenes.length,
         interactive_mode: stage.interactiveMode ?? false,

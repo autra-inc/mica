@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ListObjectsV2Command, DeleteObjectsCommand } from '@aws-sdk/client-s3';
 import sql from '@/lib/db/mica';
+import s3 from '@/lib/s3/mica';
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -67,6 +69,23 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
     await sql`DELETE FROM lessons WHERE id = ${id}`;
+
+    // Best-effort S3 cleanup — delete all media uploaded for this lesson
+    const bucket = process.env.MICA_MEDIA_BUCKET;
+    if (s3 && bucket) {
+      const prefix = `lesson-${id}/`;
+      const listed = await s3.send(new ListObjectsV2Command({ Bucket: bucket, Prefix: prefix }));
+      const objects = listed.Contents?.map((o) => ({ Key: o.Key! })) ?? [];
+      if (objects.length) {
+        await s3.send(
+          new DeleteObjectsCommand({
+            Bucket: bucket,
+            Delete: { Objects: objects, Quiet: true },
+          }),
+        );
+      }
+    }
+
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error('[lessons] delete failed:', err);
