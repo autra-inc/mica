@@ -99,7 +99,6 @@ export function EditableTable({ elementInfo, onCellUpdate }: EditableTableProps)
                 >
                   {isEditing ? (
                     <textarea
-                      // eslint-disable-next-line jsx-a11y/no-autofocus
                       autoFocus
                       defaultValue={cell.text}
                       onMouseDown={(e) => e.stopPropagation()}

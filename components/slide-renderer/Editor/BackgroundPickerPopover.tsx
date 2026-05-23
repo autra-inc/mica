@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { PaintBucket, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSceneSelector } from '@/lib/contexts/scene-context';
 import { useCanvasOperations } from '@/lib/hooks/use-canvas-operations';
@@ -69,11 +69,6 @@ export function BackgroundPickerPopover() {
   const gradAngle = bg?.type === 'gradient' ? (bg.gradient?.rotate ?? 90) : 90;
   const imgSize: SlideBackgroundImageSize =
     bg?.type === 'image' ? (bg.image?.size ?? 'cover') : 'cover';
-
-  // Sync tab to current background type on open
-  useEffect(() => {
-    if (open && bg?.type) setTab(bg.type);
-  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!open) return;
@@ -150,7 +145,10 @@ export function BackgroundPickerPopover() {
   return (
     <div className="relative" ref={popoverRef}>
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => {
+          if (!open && bg?.type) setTab(bg.type);
+          setOpen((o) => !o);
+        }}
         className={cn(
           'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium',
           'text-gray-700 dark:text-gray-200',
