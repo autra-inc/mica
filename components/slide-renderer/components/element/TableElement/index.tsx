@@ -1,26 +1,42 @@
 'use client';
 
+import { useCallback } from 'react';
 import type { PPTTableElement } from '@/lib/types/slides';
+import { useCanvasOperations } from '@/lib/hooks/use-canvas-operations';
+import { useHistorySnapshot } from '@/lib/hooks/use-history-snapshot';
 import { StaticTable } from './StaticTable';
+import { EditableTable } from './EditableTable';
 
 export { BaseTableElement } from './BaseTableElement';
 
 export interface TableElementProps {
   elementInfo: PPTTableElement;
   selectElement?: (e: React.MouseEvent | React.TouchEvent, element: PPTTableElement) => void;
+  editable?: boolean;
 }
 
-/**
- * Editable table element component.
- * Supports selection/drag/resize via selectElement callback.
- * Cell editing is not implemented yet (display-only, matching ChartElement pattern).
- */
-export function TableElement({ elementInfo, selectElement }: TableElementProps) {
+export function TableElement({ elementInfo, selectElement, editable = false }: TableElementProps) {
+  const { updateElement } = useCanvasOperations();
+  const { addHistorySnapshot } = useHistorySnapshot();
+
   const handleSelectElement = (e: React.MouseEvent | React.TouchEvent) => {
     if (elementInfo.lock) return;
     e.stopPropagation();
     selectElement?.(e, elementInfo);
   };
+
+  const handleCellUpdate = useCallback(
+    (rowIdx: number, colIdx: number, text: string) => {
+      const newData = elementInfo.data.map((row, rIdx) =>
+        row.map((cell, cIdx) =>
+          rIdx === rowIdx && cIdx === colIdx ? { ...cell, text } : cell,
+        ),
+      );
+      updateElement({ id: elementInfo.id, props: { data: newData } as Partial<PPTTableElement> });
+      addHistorySnapshot();
+    },
+    [elementInfo, updateElement, addHistorySnapshot],
+  );
 
   return (
     <div
@@ -43,7 +59,11 @@ export function TableElement({ elementInfo, selectElement }: TableElementProps) 
           onMouseDown={handleSelectElement}
           onTouchStart={handleSelectElement}
         >
-          <StaticTable elementInfo={elementInfo} />
+          {editable && !elementInfo.lock ? (
+            <EditableTable elementInfo={elementInfo} onCellUpdate={handleCellUpdate} />
+          ) : (
+            <StaticTable elementInfo={elementInfo} />
+          )}
         </div>
       </div>
     </div>

@@ -243,7 +243,7 @@ export function EditableElement({
     >
       <ContextMenu>
         <ContextMenuTrigger>
-          <CurrentElementComponent elementInfo={elementInfo} selectElement={selectElement} />
+          <CurrentElementComponent elementInfo={elementInfo} selectElement={selectElement} editable={true} />
         </ContextMenuTrigger>
         <ContextMenuContent>
           {contextmenus().map((item, index) => {
