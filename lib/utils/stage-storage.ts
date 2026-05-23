@@ -12,6 +12,14 @@ import { saveChatSessions, loadChatSessions, deleteChatSessions } from './chat-s
 import { clearPlaybackState } from './playback-storage';
 import { clearAllForScene } from '@/lib/quiz/persistence';
 import { createLogger } from '@/lib/logger';
+import {
+  cloudListLessons,
+  cloudLoadLesson,
+  cloudSaveLesson,
+  cloudDeleteLesson,
+  cloudRenameLesson,
+  cloudLessonToListItem,
+} from './cloud-storage';
 
 const log = createLogger('StageStorage');
 
@@ -76,6 +84,9 @@ export async function saveStageData(stageId: string, data: StageStoreData): Prom
     }
 
     log.info(`Saved stage: ${stageId}`);
+
+    // Cloud sync — best-effort, does not block or throw
+    cloudSaveLesson(stageId, data);
   } catch (error) {
     log.error('Failed to save stage:', error);
     throw error;
@@ -87,9 +98,18 @@ export async function saveStageData(stageId: string, data: StageStoreData): Prom
  */
 export async function loadStageData(stageId: string): Promise<StageStoreData | null> {
   try {
-    // Load stage
+    // Load stage from local IndexedDB
     const stage = await db.stages.get(stageId);
+
     if (!stage) {
+      // Not in local cache — try cloud
+      log.info(`Stage not found locally, fetching from cloud: ${stageId}`);
+      const cloudData = await cloudLoadLesson(stageId);
+      if (cloudData) {
+        // Populate local cache for this session
+        await saveStageData(stageId, { ...cloudData, chats: [] });
+        return { ...cloudData, chats: [] };
+      }
       log.info(`Stage not found: ${stageId}`);
       return null;
     }
@@ -139,6 +159,9 @@ export async function deleteStageData(stageId: string): Promise<void> {
     }
 
     log.info(`Deleted stage: ${stageId}`);
+
+    // Cloud sync — best-effort
+    cloudDeleteLesson(stageId);
   } catch (error) {
     log.error('Failed to delete stage:', error);
     throw error;
@@ -146,9 +169,16 @@ export async function deleteStageData(stageId: string): Promise<void> {
 }
 
 /**
- * List all stages
+ * List all stages — prefers cloud, falls back to local IndexedDB.
  */
 export async function listStages(): Promise<StageListItem[]> {
+  try {
+    const cloud = await cloudListLessons();
+    if (cloud.length > 0) return cloud.map(cloudLessonToListItem);
+  } catch {
+    // Fall through to local
+  }
+
   try {
     const stages = await db.stages.orderBy('updatedAt').reverse().toArray();
 
@@ -311,6 +341,9 @@ export async function renameStage(stageId: string, newName: string): Promise<voi
   try {
     await db.stages.update(stageId, { name: newName, updatedAt: Date.now() });
     log.info(`Renamed stage ${stageId} to "${newName}"`);
+
+    // Cloud sync — best-effort
+    cloudRenameLesson(stageId, newName);
   } catch (error) {
     log.error('Failed to rename stage:', error);
     throw error;
