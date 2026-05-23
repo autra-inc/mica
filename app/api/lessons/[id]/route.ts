@@ -36,16 +36,18 @@ export async function PUT(req: NextRequest, { params }: Params) {
 
     if (data !== undefined) {
       // Full update
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const dataJson = sql!.json(data as any);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const thumbnailJson = thumbnail_data != null ? sql!.json(thumbnail_data as any) : null;
       await sql`
         UPDATE lessons SET
           title          = ${title ?? sql`title`},
           description    = ${description ?? null},
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          data           = ${sql!.json(data as any)},
+          data           = ${dataJson},
           scene_count    = ${scene_count ?? 0},
           interactive_mode = ${interactive_mode ?? false},
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          thumbnail_data = ${thumbnail_data != null ? sql!.json(thumbnail_data as any) : null},
+          thumbnail_data = ${thumbnailJson},
           updated_at     = now()
         WHERE id = ${id}
       `;

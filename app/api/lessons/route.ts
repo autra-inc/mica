@@ -47,19 +47,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'id and data are required' }, { status: 400 });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const dataJson = sql!.json(data as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const thumbnailJson = thumbnail_data != null ? sql!.json(thumbnail_data as any) : null;
     await sql`
       INSERT INTO lessons (id, title, description, data, created_by, scene_count, interactive_mode, thumbnail_data)
       VALUES (
         ${id},
         ${title ?? 'Untitled'},
         ${description ?? null},
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ${sql!.json(data as any)},
+        ${dataJson},
         ${created_by ?? ''},
         ${scene_count ?? 0},
         ${interactive_mode ?? false},
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ${thumbnail_data != null ? sql!.json(thumbnail_data as any) : null}
+        ${thumbnailJson}
       )
       ON CONFLICT (id) DO UPDATE SET
         title          = EXCLUDED.title,
