@@ -6,6 +6,7 @@ import { ScreenCanvas } from './ScreenCanvas';
 import { SlideInsertToolbar } from './SlideInsertToolbar';
 import { PropertiesPanel } from './PropertiesPanel';
 import { TextFormatBar } from './TextFormatBar';
+import { NotesPanel } from './NotesPanel';
 
 export function SlideEditor({ mode }: { readonly mode: StageMode }) {
   return (
@@ -18,6 +19,7 @@ export function SlideEditor({ mode }: { readonly mode: StageMode }) {
         </div>
         {mode === 'autonomous' && <PropertiesPanel />}
       </div>
+      {mode === 'autonomous' && <NotesPanel />}
     </div>
   );
 }

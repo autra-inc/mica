@@ -820,6 +820,7 @@ export interface Slide {
   turningMode?: TurningMode;
   sectionTag?: SectionTag;
   type?: SlideType;
+  notes?: string;
 }
 
 /**
