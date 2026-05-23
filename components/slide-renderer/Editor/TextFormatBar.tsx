@@ -91,7 +91,6 @@ function ColorBtn({
 // ── Main component ─────────────────────────────────────────────────────────
 
 export function TextFormatBar() {
-  const editingElementId = useCanvasStore.use.editingElementId();
   const activeElementIdList = useCanvasStore.use.activeElementIdList();
   const richTextAttrs = useCanvasStore.use.richTextAttrs();
   const currentSlide = useSceneSelector<SlideContent, Slide>((c) => c.canvas);
@@ -106,7 +105,6 @@ export function TextFormatBar() {
 
   if (!selectedTextElement) return null;
 
-  const isEditing = !!editingElementId;
   const attrs = richTextAttrs;
 
   // Parse font size number from "16px" string
@@ -115,16 +113,16 @@ export function TextFormatBar() {
   return (
     <div className="flex items-center gap-0.5 px-2 py-1 bg-gray-50 dark:bg-gray-850 border-b border-gray-200 dark:border-gray-700 flex-wrap">
       {/* Bold / Italic / Underline / Strikethrough */}
-      <Btn active={attrs.bold} disabled={!isEditing} title="Bold" onClick={() => cmd('bold')}>
+      <Btn active={attrs.bold} title="Bold" onClick={() => cmd('bold')}>
         <Bold className="w-3 h-3" />
       </Btn>
-      <Btn active={attrs.em} disabled={!isEditing} title="Italic" onClick={() => cmd('em')}>
+      <Btn active={attrs.em} title="Italic" onClick={() => cmd('em')}>
         <Italic className="w-3 h-3" />
       </Btn>
-      <Btn active={attrs.underline} disabled={!isEditing} title="Underline" onClick={() => cmd('underline')}>
+      <Btn active={attrs.underline} title="Underline" onClick={() => cmd('underline')}>
         <Underline className="w-3 h-3" />
       </Btn>
-      <Btn active={attrs.strikethrough} disabled={!isEditing} title="Strikethrough" onClick={() => cmd('strikethrough')}>
+      <Btn active={attrs.strikethrough} title="Strikethrough" onClick={() => cmd('strikethrough')}>
         <Strikethrough className="w-3 h-3" />
       </Btn>
 
@@ -133,14 +131,12 @@ export function TextFormatBar() {
       {/* Font family */}
       <select
         value={attrs.fontname}
-        disabled={!isEditing}
         onMouseDown={(e) => e.stopPropagation()}
         onChange={(e) => cmd('fontname', e.target.value)}
         className={cn(
           'h-6 px-1 text-xs border border-gray-200 dark:border-gray-600 rounded cursor-pointer',
           'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300',
           'focus:outline-none focus:ring-1 focus:ring-primary/40 max-w-[120px]',
-          !isEditing && 'opacity-40',
         )}
       >
         {FONTS.map((f) => (
@@ -153,7 +149,7 @@ export function TextFormatBar() {
       {divider}
 
       {/* Font size */}
-      <Btn disabled={!isEditing} title="Decrease font size" onClick={() => cmd('fontsize-reduce', '2')}>
+      <Btn title="Decrease font size" onClick={() => cmd('fontsize-reduce', '2')}>
         <span className="text-[10px] font-medium leading-none">A−</span>
       </Btn>
       <div className="flex items-center">
@@ -167,62 +163,42 @@ export function TextFormatBar() {
             const v = parseInt(e.target.value);
             if (!isNaN(v) && v >= 8 && v <= 200) cmd('fontsize', `${v}px`);
           }}
-          className={cn(
-            'w-9 h-6 text-center text-xs border border-gray-200 dark:border-gray-600 rounded',
-            'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300',
-            'focus:outline-none focus:ring-1 focus:ring-primary/40',
-            !isEditing && 'opacity-40',
-          )}
+          className="w-9 h-6 text-center text-xs border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-primary/40"
         />
       </div>
-      <Btn disabled={!isEditing} title="Increase font size" onClick={() => cmd('fontsize-add', '2')}>
+      <Btn title="Increase font size" onClick={() => cmd('fontsize-add', '2')}>
         <span className="text-[10px] font-medium leading-none">A+</span>
       </Btn>
 
       {divider}
 
       {/* Text color */}
-      <ColorBtn
-        color={attrs.color}
-        title="Text color"
-        onChange={(v) => cmd('color', v)}
-      />
+      <ColorBtn color={attrs.color} title="Text color" onChange={(v) => cmd('color', v)} />
       {/* Background color */}
-      <ColorBtn
-        color={attrs.backcolor}
-        title="Highlight color"
-        onChange={(v) => cmd('backcolor', v)}
-      />
+      <ColorBtn color={attrs.backcolor} title="Highlight color" onChange={(v) => cmd('backcolor', v)} />
 
       {divider}
 
       {/* Alignment */}
-      <Btn active={attrs.align === 'left'} disabled={!isEditing} title="Align left" onClick={() => cmd('align', 'left')}>
+      <Btn active={attrs.align === 'left'} title="Align left" onClick={() => cmd('align', 'left')}>
         <AlignLeft className="w-3 h-3" />
       </Btn>
-      <Btn active={attrs.align === 'center'} disabled={!isEditing} title="Align center" onClick={() => cmd('align', 'center')}>
+      <Btn active={attrs.align === 'center'} title="Align center" onClick={() => cmd('align', 'center')}>
         <AlignCenter className="w-3 h-3" />
       </Btn>
-      <Btn active={attrs.align === 'right'} disabled={!isEditing} title="Align right" onClick={() => cmd('align', 'right')}>
+      <Btn active={attrs.align === 'right'} title="Align right" onClick={() => cmd('align', 'right')}>
         <AlignRight className="w-3 h-3" />
       </Btn>
 
       {divider}
 
       {/* Lists */}
-      <Btn active={attrs.bulletList} disabled={!isEditing} title="Bullet list" onClick={() => cmd('bulletList')}>
+      <Btn active={attrs.bulletList} title="Bullet list" onClick={() => cmd('bulletList')}>
         <List className="w-3 h-3" />
       </Btn>
-      <Btn active={attrs.orderedList} disabled={!isEditing} title="Numbered list" onClick={() => cmd('orderedList')}>
+      <Btn active={attrs.orderedList} title="Numbered list" onClick={() => cmd('orderedList')}>
         <ListOrdered className="w-3 h-3" />
       </Btn>
-
-      {/* Hint when not editing */}
-      {!isEditing && (
-        <span className="ml-2 text-[10px] text-gray-400 italic">
-          Click inside text to edit formatting
-        </span>
-      )}
     </div>
   );
 }
