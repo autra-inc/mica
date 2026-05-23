@@ -40,10 +40,10 @@ export async function PUT(req: NextRequest, { params }: Params) {
         UPDATE lessons SET
           title          = ${title ?? sql`title`},
           description    = ${description ?? null},
-          data           = ${data},
+          data           = ${data as object},
           scene_count    = ${scene_count ?? 0},
           interactive_mode = ${interactive_mode ?? false},
-          thumbnail_data = ${thumbnail_data ?? null},
+          thumbnail_data = ${(thumbnail_data ?? null) as object | null},
           updated_at     = now()
         WHERE id = ${id}
       `;
