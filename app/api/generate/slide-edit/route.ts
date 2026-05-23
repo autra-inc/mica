@@ -19,14 +19,20 @@ function summarizeSlide(slide: Slide): string {
     const parts: string[] = [`id:"${el.id}"`, `type:"${el.type}"`, pos, size];
 
     if (el.type === 'text') {
-      const plain = el.content.replace(/<[^>]+>/g, '').trim().slice(0, 120);
+      const plain = el.content
+        .replace(/<[^>]+>/g, '')
+        .trim()
+        .slice(0, 120);
       if (plain) parts.push(`text:"${plain}"`);
       if (el.defaultFontName) parts.push(`font:"${el.defaultFontName}"`);
       if (el.defaultColor) parts.push(`color:"${el.defaultColor}"`);
     } else if (el.type === 'shape') {
       parts.push(`fill:"${el.fill}"`);
       if (el.text?.content) {
-        const plain = el.text.content.replace(/<[^>]+>/g, '').trim().slice(0, 80);
+        const plain = el.text.content
+          .replace(/<[^>]+>/g, '')
+          .trim()
+          .slice(0, 80);
         if (plain) parts.push(`text:"${plain}"`);
       }
     } else if (el.type === 'image') {

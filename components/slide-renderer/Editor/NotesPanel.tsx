@@ -85,11 +85,7 @@ export function NotesPanel() {
         )}
       >
         <span className="font-medium">Notes</span>
-        {expanded ? (
-          <ChevronDown className="w-3.5 h-3.5" />
-        ) : (
-          <ChevronUp className="w-3.5 h-3.5" />
-        )}
+        {expanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
       </button>
 
       {/* Expanded content */}

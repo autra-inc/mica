@@ -200,7 +200,15 @@ export function AICommandBar() {
     } finally {
       setLoading(false);
     }
-  }, [imagePrompt, loading, imageProviderId, imageProvidersConfig, sceneId, addElement, addHistorySnapshot]);
+  }, [
+    imagePrompt,
+    loading,
+    imageProviderId,
+    imageProvidersConfig,
+    sceneId,
+    addElement,
+    addHistorySnapshot,
+  ]);
 
   return (
     <div className="relative" ref={popoverRef}>
@@ -222,7 +230,10 @@ export function AICommandBar() {
           <div className="flex items-center justify-between mb-2">
             <div className="flex gap-1">
               <button
-                onClick={() => { setTab('edit'); setError(null); }}
+                onClick={() => {
+                  setTab('edit');
+                  setError(null);
+                }}
                 className={cn(
                   'flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-colors',
                   tab === 'edit'
@@ -234,7 +245,10 @@ export function AICommandBar() {
                 Edit
               </button>
               <button
-                onClick={() => { setTab('image'); setError(null); }}
+                onClick={() => {
+                  setTab('image');
+                  setError(null);
+                }}
                 className={cn(
                   'flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-colors',
                   tab === 'image'

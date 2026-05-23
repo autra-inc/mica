@@ -15,11 +15,17 @@ function summarizeSlide(slide: Slide): string {
     const parts: string[] = [`type:"${el.type}"`, pos, size];
 
     if (el.type === 'text') {
-      const plain = el.content.replace(/<[^>]+>/g, '').trim().slice(0, 200);
+      const plain = el.content
+        .replace(/<[^>]+>/g, '')
+        .trim()
+        .slice(0, 200);
       if (plain) parts.push(`text:"${plain}"`);
     } else if (el.type === 'shape') {
       if (el.text?.content) {
-        const plain = el.text.content.replace(/<[^>]+>/g, '').trim().slice(0, 100);
+        const plain = el.text.content
+          .replace(/<[^>]+>/g, '')
+          .trim()
+          .slice(0, 100);
         if (plain) parts.push(`text:"${plain}"`);
       }
     } else if (el.type === 'image') {
