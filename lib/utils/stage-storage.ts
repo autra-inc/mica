@@ -169,23 +169,16 @@ export async function deleteStageData(stageId: string): Promise<void> {
 }
 
 /**
- * List all stages — prefers cloud, falls back to local IndexedDB.
+ * List all stages from local IndexedDB only (instant).
+ * Call listStagesFromCloud() afterwards to revalidate.
  */
 export async function listStages(): Promise<StageListItem[]> {
   try {
-    const cloud = await cloudListLessons();
-    if (cloud.length > 0) return cloud.map(cloudLessonToListItem);
-  } catch {
-    // Fall through to local
-  }
-
-  try {
     const stages = await db.stages.orderBy('updatedAt').reverse().toArray();
 
-    const stageList: StageListItem[] = await Promise.all(
+    return Promise.all(
       stages.map(async (stage) => {
         const sceneCount = await db.scenes.where('stageId').equals(stage.id).count();
-
         return {
           id: stage.id,
           name: stage.name,
@@ -197,11 +190,23 @@ export async function listStages(): Promise<StageListItem[]> {
         };
       }),
     );
-
-    return stageList;
   } catch (error) {
     log.error('Failed to list stages:', error);
     return [];
+  }
+}
+
+/**
+ * Fetch lesson list from cloud. Returns null if cloud is unreachable or empty.
+ * Use after listStages() to revalidate the home page without blocking first render.
+ */
+export async function listStagesFromCloud(): Promise<StageListItem[] | null> {
+  try {
+    const cloud = await cloudListLessons();
+    if (cloud.length > 0) return cloud.map(cloudLessonToListItem);
+    return null;
+  } catch {
+    return null;
   }
 }
 

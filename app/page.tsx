@@ -43,6 +43,7 @@ import { useUserProfileStore, AVATAR_OPTIONS } from '@/lib/store/user-profile';
 import {
   StageListItem,
   listStages,
+  listStagesFromCloud,
   deleteStageData,
   renameStage,
   getFirstSlideByStages,
@@ -178,14 +179,24 @@ function HomePage() {
 
   const loadClassrooms = async () => {
     try {
-      const list = await listStages();
-      setClassrooms(list);
-      // Load first slide thumbnails
-      if (list.length > 0) {
-        const slides = await getFirstSlideByStages(list.map((c) => c.id));
+      // Show local IndexedDB immediately (instant)
+      const local = await listStages();
+      setClassrooms(local);
+      if (local.length > 0) {
+        const slides = await getFirstSlideByStages(local.map((c) => c.id));
         replaceThumbnails(slides);
       } else {
         replaceThumbnails({});
+      }
+
+      // Revalidate from cloud in the background
+      const cloud = await listStagesFromCloud();
+      if (cloud) {
+        setClassrooms(cloud);
+        if (cloud.length > 0) {
+          const slides = await getFirstSlideByStages(cloud.map((c) => c.id));
+          replaceThumbnails(slides);
+        }
       }
     } catch (err) {
       log.error('Failed to load classrooms:', err);
