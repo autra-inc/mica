@@ -26,6 +26,7 @@ export interface TextElementProps {
 export function TextElement({ elementInfo, selectElement }: TextElementProps) {
   const handleElementId = useCanvasStore.use.handleElementId();
   const isScaling = useCanvasStore.use.isScaling();
+  const setEditingElementId = useCanvasStore.use.setEditingElementId();
   const { updateElement, deleteElement } = useCanvasOperations();
   const { addHistorySnapshot } = useHistorySnapshot();
 
@@ -211,6 +212,8 @@ export function TextElement({ elementInfo, selectElement }: TextElementProps) {
               editable={!elementInfo.lock}
               value={elementInfo.content}
               onUpdate={({ value, ignore }) => updateContent(value, ignore)}
+              onFocus={() => setEditingElementId(elementInfo.id)}
+              onBlur={() => setEditingElementId('')}
               onMouseDown={(e) => handleSelectElement(e as React.MouseEvent, false)}
             />
           </div>
