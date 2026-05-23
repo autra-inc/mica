@@ -197,6 +197,50 @@ export async function listStages(): Promise<StageListItem[]> {
 }
 
 /**
+ * Fetch full lesson data from cloud for IDs not in local IndexedDB.
+ * Populates local cache so thumbnails and scene data are available immediately.
+ */
+export async function hydrateFromCloud(ids: string[]): Promise<void> {
+  await Promise.all(
+    ids.map(async (id) => {
+      try {
+        const data = await cloudLoadLesson(id);
+        if (data) {
+          const now = Date.now();
+          await db.stages.put({
+            id,
+            name: (data.stage as Stage).name || 'Untitled',
+            description: (data.stage as Stage).description,
+            createdAt: (data.stage as Stage).createdAt || now,
+            updatedAt: now,
+            languageDirective: (data.stage as Stage).languageDirective,
+            style: (data.stage as Stage).style,
+            currentSceneId: data.currentSceneId || undefined,
+            agentIds: (data.stage as Stage).agentIds,
+            videoManifest: (data.stage as Stage).videoManifest,
+            interactiveMode: (data.stage as Stage).interactiveMode,
+          });
+          if (data.scenes?.length) {
+            await db.scenes.where('stageId').equals(id).delete();
+            await db.scenes.bulkPut(
+              data.scenes.map((scene, index) => ({
+                ...scene,
+                stageId: id,
+                order: scene.order ?? index,
+                createdAt: scene.createdAt || now,
+                updatedAt: scene.updatedAt || now,
+              })),
+            );
+          }
+        }
+      } catch {
+        // Best-effort — missing thumbnail is acceptable
+      }
+    }),
+  );
+}
+
+/**
  * Fetch lesson list from cloud. Returns null if cloud is unreachable or empty.
  * Use after listStages() to revalidate the home page without blocking first render.
  */

@@ -44,6 +44,7 @@ import {
   StageListItem,
   listStages,
   listStagesFromCloud,
+  hydrateFromCloud,
   deleteStageData,
   renameStage,
   getFirstSlideByStages,
@@ -194,6 +195,10 @@ function HomePage() {
       if (cloud) {
         setClassrooms(cloud);
         if (cloud.length > 0) {
+          // Fetch full data for any lessons not yet in local IndexedDB so thumbnails render
+          const localIds = new Set(local.map((c) => c.id));
+          const missing = cloud.filter((c) => !localIds.has(c.id)).map((c) => c.id);
+          if (missing.length > 0) await hydrateFromCloud(missing);
           const slides = await getFirstSlideByStages(cloud.map((c) => c.id));
           replaceThumbnails(slides);
         }
