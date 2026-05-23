@@ -5,6 +5,7 @@
 
 import type { StageStoreData, StageListItem } from './stage-storage';
 import type { Stage } from '../types/stage';
+import type { Slide } from '../types/slides';
 import { extractAndUploadMedia } from './media-extractor';
 
 export interface CloudLesson {
@@ -14,8 +15,19 @@ export interface CloudLesson {
   created_by: string;
   scene_count: number;
   interactive_mode: boolean;
+  thumbnail_data?: Slide | null;
   created_at: string;
   updated_at: string;
+}
+
+/** Pick the first slide canvas from already-media-extracted scenes for thumbnail storage. */
+function firstSlideCanvas(data: StageStoreData): Slide | null {
+  for (const scene of data.scenes) {
+    if (scene.content?.type === 'slide') {
+      return scene.content.canvas as Slide;
+    }
+  }
+  return null;
 }
 
 export async function cloudListLessons(): Promise<CloudLesson[]> {
@@ -57,6 +69,7 @@ export async function cloudSaveLesson(id: string, data: StageStoreData): Promise
         created_by: '',
         scene_count: data.scenes.length,
         interactive_mode: stage.interactiveMode ?? false,
+        thumbnail_data: firstSlideCanvas(uploadedData),
       }),
     });
   } catch {
@@ -92,6 +105,7 @@ export function cloudLessonToListItem(l: CloudLesson): StageListItem {
     description: l.description,
     sceneCount: l.scene_count,
     interactiveMode: l.interactive_mode,
+    thumbnailSlide: l.thumbnail_data ?? undefined,
     createdAt: new Date(l.created_at).getTime(),
     updatedAt: new Date(l.updated_at).getTime(),
   };

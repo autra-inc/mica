@@ -25,12 +25,13 @@ export async function PUT(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
     const body = await req.json();
-    const { title, description, data, scene_count, interactive_mode } = body as {
+    const { title, description, data, scene_count, interactive_mode, thumbnail_data } = body as {
       title?: string;
       description?: string;
       data?: unknown;
       scene_count?: number;
       interactive_mode?: boolean;
+      thumbnail_data?: unknown;
     };
 
     if (data !== undefined) {
@@ -42,6 +43,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
           data           = ${JSON.stringify(data)},
           scene_count    = ${scene_count ?? 0},
           interactive_mode = ${interactive_mode ?? false},
+          thumbnail_data = ${thumbnail_data ? JSON.stringify(thumbnail_data) : null},
           updated_at     = now()
         WHERE id = ${id}
       `;

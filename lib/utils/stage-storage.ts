@@ -6,6 +6,7 @@
  */
 
 import { Stage, Scene } from '../types/stage';
+import type { Slide } from '../types/slides';
 import { ChatSession } from '../types/chat';
 import { db } from './database';
 import { saveChatSessions, loadChatSessions, deleteChatSessions } from './chat-storage';
@@ -38,6 +39,8 @@ export interface StageListItem {
   createdAt: number;
   updatedAt: number;
   interactiveMode?: boolean;
+  /** First slide canvas — populated from cloud `thumbnail_data` so the home page renders thumbnails without N+1 fetches. */
+  thumbnailSlide?: Slide;
 }
 
 /**

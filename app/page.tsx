@@ -195,12 +195,25 @@ function HomePage() {
       if (cloud) {
         setClassrooms(cloud);
         if (cloud.length > 0) {
-          // Fetch full data for any lessons not yet in local IndexedDB so thumbnails render
-          const localIds = new Set(local.map((c) => c.id));
-          const missing = cloud.filter((c) => !localIds.has(c.id)).map((c) => c.id);
-          if (missing.length > 0) await hydrateFromCloud(missing);
-          const slides = await getFirstSlideByStages(cloud.map((c) => c.id));
-          replaceThumbnails(slides);
+          // Inline thumbnails (post-migration): use cloud's `thumbnail_data` directly.
+          // Legacy rows without thumbnail_data fall through to IndexedDB-based lookup.
+          const inlineSlides: Record<string, Slide> = {};
+          const needsLocal: string[] = [];
+          for (const c of cloud) {
+            if (c.thumbnailSlide) inlineSlides[c.id] = c.thumbnailSlide;
+            else needsLocal.push(c.id);
+          }
+
+          if (needsLocal.length > 0) {
+            // Hydrate IndexedDB for any cloud-only lessons so the local lookup finds scenes
+            const localIds = new Set(local.map((c) => c.id));
+            const missing = needsLocal.filter((id) => !localIds.has(id));
+            if (missing.length > 0) await hydrateFromCloud(missing);
+            const fallback = await getFirstSlideByStages(needsLocal);
+            Object.assign(inlineSlides, fallback);
+          }
+
+          replaceThumbnails(inlineSlides);
         }
       }
     } catch (err) {
