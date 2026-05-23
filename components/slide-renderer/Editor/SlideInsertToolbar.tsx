@@ -19,6 +19,7 @@ import { useHistorySnapshot } from '@/lib/hooks/use-history-snapshot';
 import { LINE_LIST } from '@/configs/lines';
 import { ShapePickerPopover } from './ShapePickerPopover';
 import { BackgroundPickerPopover } from './BackgroundPickerPopover';
+import { AICommandBar } from './AICommandBar';
 import type { PPTTableElement } from '@/lib/types/slides';
 
 // ── Shared button style ────────────────────────────────────────────────────
@@ -285,6 +286,11 @@ export function SlideInsertToolbar() {
 
       {/* Background */}
       <BackgroundPickerPopover />
+
+      <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-0.5" />
+
+      {/* AI edit */}
+      <AICommandBar />
 
       {/* Hint when a draw tool is active */}
       {creatingElement && (
