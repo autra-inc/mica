@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -9,7 +9,8 @@ import { SceneProvider } from '@/lib/contexts/scene-context';
 import { Whiteboard } from '@/components/whiteboard';
 import { CanvasToolbar } from '@/components/canvas/canvas-toolbar';
 import type { CanvasToolbarProps } from '@/components/canvas/canvas-toolbar';
-import type { Scene, StageMode } from '@/lib/types/stage';
+import { InteractiveEditPanel } from '@/components/scene-renderers/interactive-edit-panel';
+import type { Scene, StageMode, InteractiveContent } from '@/lib/types/stage';
 import { useI18n } from '@/lib/hooks/use-i18n';
 import { ClassroomCompletePageConnected } from '@/components/scene-renderers/classroom-complete';
 
@@ -52,6 +53,7 @@ export function CanvasArea({
   onToggleEditMode,
 }: CanvasAreaProps) {
   const { t } = useI18n();
+  const [isInteractiveEditOpen, setIsInteractiveEditOpen] = useState(false);
   const showControls = mode === 'playback' && !whiteboardOpen;
   const showPlayHint =
     showControls &&
@@ -244,6 +246,15 @@ export function CanvasArea({
         </div>
       </div>
 
+      {/* ── AI Edit Panel (interactive scenes) ── */}
+      {isInteractiveEditOpen && currentScene?.type === 'interactive' && (
+        <InteractiveEditPanel
+          content={currentScene.content as InteractiveContent}
+          sceneId={currentScene.id}
+          onClose={() => setIsInteractiveEditOpen(false)}
+        />
+      )}
+
       {/* ── Canvas Toolbar — in document flow, only when not merged into roundtable ── */}
       {!hideToolbar && (
         <CanvasToolbar
@@ -271,6 +282,12 @@ export function CanvasArea({
           onStopDiscussion={onStopDiscussion}
           isEditMode={mode === 'autonomous'}
           onToggleEditMode={currentScene?.type === 'slide' ? onToggleEditMode : undefined}
+          isInteractiveEditOpen={isInteractiveEditOpen}
+          onToggleInteractiveEdit={
+            currentScene?.type === 'interactive'
+              ? () => setIsInteractiveEditOpen((v) => !v)
+              : undefined
+          }
         />
       )}
     </div>

@@ -991,7 +991,7 @@ async function generatePBLSceneContent(
  * Extract HTML document from AI response.
  * Tries to find <!DOCTYPE html>...</html> first, then falls back to code block extraction.
  */
-function extractHtml(response: string): string | null {
+export function extractHtml(response: string): string | null {
   // Strategy 1: Find complete HTML document
   const doctypeStart = response.indexOf('<!DOCTYPE html>');
   const htmlTagStart = response.indexOf('<html');
@@ -1160,7 +1160,7 @@ async function generateWidgetContent(
 /**
  * Extract widget config from embedded JSON in HTML
  */
-function extractWidgetConfig(html: string): WidgetConfig | undefined {
+export function extractWidgetConfig(html: string): WidgetConfig | undefined {
   const match = html.match(
     /<script type="application\/json" id="widget-config">([\s\S]*?)<\/script>/,
   );
@@ -1176,7 +1176,7 @@ function extractWidgetConfig(html: string): WidgetConfig | undefined {
 /**
  * Generate teacher actions for a widget
  */
-async function generateWidgetTeacherActions(
+export async function generateWidgetTeacherActions(
   widgetType: WidgetType,
   outline: SceneOutline,
   widgetConfig: WidgetConfig | undefined,

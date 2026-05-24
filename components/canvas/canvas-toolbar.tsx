@@ -17,6 +17,7 @@ import {
   Repeat,
   Maximize2,
   Minimize2,
+  Wand2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useStageStore } from '@/lib/store';
@@ -54,6 +55,8 @@ export interface CanvasToolbarProps {
   readonly onCycleSpeed?: () => void;
   readonly isEditMode?: boolean;
   readonly onToggleEditMode?: () => void;
+  readonly isInteractiveEditOpen?: boolean;
+  readonly onToggleInteractiveEdit?: () => void;
 }
 
 /* Compact control button */
@@ -114,6 +117,8 @@ export function CanvasToolbar({
   onCycleSpeed,
   isEditMode,
   onToggleEditMode,
+  isInteractiveEditOpen,
+  onToggleInteractiveEdit,
 }: CanvasToolbarProps) {
   const { t } = useI18n();
   const canGoPrev = currentSceneIndex > 0;
@@ -417,6 +422,26 @@ export function CanvasToolbar({
               title={isEditMode ? t('stage.doneEditing') : t('stage.editSlide')}
             >
               {isEditMode ? <Eye className="w-3.5 h-3.5" /> : <SquarePen className="w-3.5 h-3.5" />}
+            </button>
+          )}
+
+          {/* AI Edit toggle (interactive scenes only) */}
+          {onToggleInteractiveEdit && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleInteractiveEdit();
+              }}
+              className={cn(
+                ctrlBtn,
+                'w-6 h-6',
+                isInteractiveEditOpen
+                  ? 'text-violet-600 dark:text-violet-400 bg-violet-500/10 dark:bg-violet-400/10'
+                  : 'text-gray-500 dark:text-gray-400',
+              )}
+              title={isInteractiveEditOpen ? 'Close AI edit' : 'Edit with AI'}
+            >
+              <Wand2 className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
