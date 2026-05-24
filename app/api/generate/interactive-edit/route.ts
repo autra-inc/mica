@@ -120,10 +120,11 @@ export async function POST(req: NextRequest) {
       return apiError('MISSING_REQUIRED_FIELD', 400, 'currentHtml is required for patch mode');
     }
 
-    const { model: languageModel, modelInfo, thinkingConfig } = await resolveModelFromRequest(
-      req,
-      body,
-    );
+    const {
+      model: languageModel,
+      modelInfo,
+      thinkingConfig,
+    } = await resolveModelFromRequest(req, body);
 
     const aiCall: AICallFn = async (systemPrompt, userPrompt) => {
       const result = await callLLM(

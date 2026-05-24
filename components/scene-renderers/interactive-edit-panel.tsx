@@ -132,11 +132,7 @@ export function InteractiveEditPanel({ content, sceneId, onClose }: InteractiveE
             'disabled:opacity-40 disabled:pointer-events-none',
           )}
         >
-          {isLoading ? (
-            <Loader2 className="w-3 h-3 animate-spin" />
-          ) : (
-            <Wand2 className="w-3 h-3" />
-          )}
+          {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Wand2 className="w-3 h-3" />}
           {isLoading ? 'Applying…' : 'Apply'}
         </button>
 
