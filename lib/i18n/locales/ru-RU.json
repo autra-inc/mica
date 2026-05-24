@@ -49,6 +49,8 @@
   },
   "import": {
     "classroom": "Импорт класса",
+    "pptx": "Импорт PowerPoint",
+    "importing": "Импортирование…",
     "parsing": "Анализ ZIP...",
     "validating": "Проверка данных...",
     "writingMedia": "Запись медиафайлов...",

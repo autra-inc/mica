@@ -49,6 +49,8 @@
   },
   "import": {
     "classroom": "استيراد فصل",
+    "pptx": "استيراد PowerPoint",
+    "importing": "جارٍ الاستيراد…",
     "parsing": "جارٍ تحليل ملف ZIP...",
     "validating": "جارٍ التحقق من البيانات...",
     "writingCourse": "جارٍ كتابة بيانات المقرر...",

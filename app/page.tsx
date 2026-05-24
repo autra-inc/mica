@@ -10,7 +10,9 @@ import {
   Clock,
   Copy,
   ImagePlus,
+  Loader2,
   Pencil,
+  Presentation,
   Trash2,
   Search,
   Settings,
@@ -227,6 +229,29 @@ function HomePage() {
     },
   );
 
+  const pptxInputRef = useRef<HTMLInputElement>(null);
+  const [isImportingPptx, setIsImportingPptx] = useState(false);
+
+  const handlePptxImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsImportingPptx(true);
+    try {
+      const formData = new FormData();
+      formData.append('pptx', file);
+      const res = await fetch('/api/import/pptx', { method: 'POST', body: formData });
+      if (!res.ok) throw new Error(`Import failed: ${res.status}`);
+      const json = (await res.json()) as { data: { id: string } };
+      router.push(`/classroom/${json.data.id}`);
+    } catch (err) {
+      log.error('PPTX import failed:', err);
+      toast.error('Failed to import PowerPoint file');
+      setIsImportingPptx(false);
+    } finally {
+      e.target.value = '';
+    }
+  };
+
   useEffect(() => {
     // Clear stale media store to prevent cross-course thumbnail contamination.
     // The store may hold tasks from a previously visited classroom whose elementIds
@@ -384,6 +409,13 @@ function HomePage() {
         type="file"
         accept=".zip"
         onChange={handleFileChange}
+        className="hidden"
+      />
+      <input
+        ref={pptxInputRef}
+        type="file"
+        accept=".pptx"
+        onChange={handlePptxImport}
         className="hidden"
       />
       {/* ═══ Top-right pill (unchanged) ═══ */}
@@ -642,17 +674,31 @@ function HomePage() {
           )}
         </AnimatePresence>
 
-        {/* ── Import button (empty state) ── */}
-        {classrooms.length === 0 && (
+        {/* ── Import buttons ── */}
+        <div className="relative z-10 mt-4 flex items-center gap-4">
+          {classrooms.length === 0 && (
+            <button
+              onClick={triggerFileSelect}
+              disabled={importing}
+              className="flex items-center gap-1.5 text-[12px] text-muted-foreground/40 hover:text-foreground/60 transition-colors"
+            >
+              <Upload className="size-3.5" />
+              <span>{t('import.classroom')}</span>
+            </button>
+          )}
           <button
-            onClick={triggerFileSelect}
-            disabled={importing}
-            className="relative z-10 mt-4 flex items-center gap-1.5 text-[12px] text-muted-foreground/40 hover:text-foreground/60 transition-colors"
+            onClick={() => pptxInputRef.current?.click()}
+            disabled={isImportingPptx}
+            className="flex items-center gap-1.5 text-[12px] text-muted-foreground/40 hover:text-foreground/60 transition-colors"
           >
-            <Upload className="size-3.5" />
-            <span>{t('import.classroom')}</span>
+            {isImportingPptx ? (
+              <Loader2 className="size-3.5 animate-spin" />
+            ) : (
+              <Presentation className="size-3.5" />
+            )}
+            <span>{isImportingPptx ? t('import.importing') : t('import.pptx')}</span>
           </button>
-        )}
+        </div>
       </motion.div>
 
       {/* ═══ Recent classrooms — collapsible ═══ */}

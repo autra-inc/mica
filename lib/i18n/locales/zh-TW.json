@@ -49,6 +49,8 @@
   },
   "import": {
     "classroom": "匯入課堂",
+    "pptx": "匯入 PowerPoint",
+    "importing": "匯入中…",
     "parsing": "正在解析 ZIP...",
     "validating": "正在驗證資料...",
     "writingMedia": "正在寫入媒體檔案...",

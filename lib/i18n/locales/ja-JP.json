@@ -49,6 +49,8 @@
   },
   "import": {
     "classroom": "教室をインポート",
+    "pptx": "PowerPoint をインポート",
+    "importing": "インポート中…",
     "parsing": "ZIP を解析中...",
     "validating": "データを検証中...",
     "writingMedia": "メディアファイルを書き込み中...",
