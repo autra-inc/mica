@@ -241,8 +241,8 @@ function HomePage() {
       formData.append('pptx', file);
       const res = await fetch('/api/import/pptx', { method: 'POST', body: formData });
       if (!res.ok) throw new Error(`Import failed: ${res.status}`);
-      const json = (await res.json()) as { data: { id: string } };
-      router.push(`/classroom/${json.data.id}`);
+      const json = (await res.json()) as { id: string };
+      router.push(`/classroom/${json.id}`);
     } catch (err) {
       log.error('PPTX import failed:', err);
       toast.error('Failed to import PowerPoint file');

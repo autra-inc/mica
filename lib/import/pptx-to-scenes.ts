@@ -280,14 +280,9 @@ function convertTable(el: PptxTable, scale: Scale): PPTTableElement {
 // ─── Group (flatten) ─────────────────────────────────────────────────────────
 
 function flattenGroup(group: PptxGroup, scale: Scale): PPTElement[] {
+  // pptxtojson returns child coordinates already in slide space
   return group.elements.flatMap((child) => {
-    // Offset child coordinates by group origin
-    const adjusted = {
-      ...child,
-      left: group.left + child.left,
-      top: group.top + child.top,
-    };
-    const converted = convertElement(adjusted as PptxElement, scale);
+    const converted = convertElement(child as PptxElement, scale);
     return converted ?? [];
   });
 }
@@ -361,11 +356,18 @@ export function pptxToScenes(
       fontName: 'Microsoft YaHei',
     };
 
-    const elements: PPTElement[] = slide.elements.flatMap((el) => {
-      const result = convertElement(el, scale);
-      if (!result) return [];
-      return Array.isArray(result) ? result : [result];
-    });
+    const convertAll = (els: PptxElement[]): PPTElement[] =>
+      els.flatMap((el) => {
+        const result = convertElement(el, scale);
+        if (!result) return [];
+        return Array.isArray(result) ? result : [result];
+      });
+
+    // layoutElements are slide-master/layout decorations — render them first (behind)
+    const elements: PPTElement[] = [
+      ...convertAll(slide.layoutElements as unknown as PptxElement[]),
+      ...convertAll(slide.elements),
+    ];
 
     const canvas: MicaSlide = {
       id: nanoid(),
